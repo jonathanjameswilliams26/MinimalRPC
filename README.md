@@ -13,15 +13,19 @@ In my opinion and personal experience, RPC api's are:
 
 ## Creating an Endpoint
 The following code will register the endpoint `HTTP POST /Example`
+
+Create a request
 ```csharp
-
-// Create a Request
 public record ExampleRequest(int Id);
+```
 
-// Create a Response
+Create a response
+```csharp
 public record ExampleResponse(int Id);
+```
 
-// Create the Endpoint
+Create an endpoint
+```csharp
 public class Example : Endpoint<ExampleRequest, ExampleResponse>
 {
     // Configure the Endpoint using Minimal API Route Builder. E.G
@@ -32,6 +36,7 @@ public class Example : Endpoint<ExampleRequest, ExampleResponse>
         .WithSummary("Example summary")
         .WithDescription("Example description");
 
+    // Implement the request handler
     public override async Task<OneOf<ExampleResponse, Unathorized, BadRequest>> Handle(ExampleRequest request, CancellationToken cancellationToken)
     {
         // If any validation / authorization errors return them
@@ -40,6 +45,22 @@ public class Example : Endpoint<ExampleRequest, ExampleResponse>
         
         // Return the response
         return new ExampleResponse(request.Id);
+    }
+}
+```
+
+## Request Validation
+Out of the box request validation is included using [FluentValidation.](https://github.com/FluentValidation/FluentValidation)
+Request validators are registered automatically to the DI container.
+
+```csharp
+public class ExampleRequestValidator : AbstractValidator<ExampleRequest>
+{
+    public ExampleRequestValidator()
+    {
+        RuleFor(x => x.Id)
+            .NotEmpty()
+            .WithErrorCode("ExampleErrorCode");
     }
 }
 ```
