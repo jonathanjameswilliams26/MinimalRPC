@@ -18,6 +18,9 @@ public abstract class Endpoint<TRequest, TResponse> : IEndpoint<TRequest, TRespo
     public RouteHandlerBuilder Map(IEndpointRouteBuilder app)
     {
         return app.MapPost(GetType().Name, Execute)
+            .WithOpenApi()
+            .WithName(GetType().Name)
+            .WithTags("All")
             .AddEndpointFilter<LoggingFilter<TRequest, TResponse>>()
             .AddEndpointFilter<UnhandledExceptionLoggingFilter<TRequest, TResponse>>()
             .AddEndpointFilter<ValidationFilter<TRequest, TResponse>>()
