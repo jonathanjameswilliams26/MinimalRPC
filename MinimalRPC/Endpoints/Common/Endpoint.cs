@@ -29,6 +29,7 @@ public abstract class Endpoint<TRequest, TResponse> : IEndpoint<TRequest, TRespo
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status500InternalServerError);
     }
+
     public abstract void Configure(RouteHandlerBuilder configuration);
     public abstract Task<OneOf<TResponse, Unathorized, BadRequest>> Handle(TRequest request, CancellationToken cancellationToken);
 
